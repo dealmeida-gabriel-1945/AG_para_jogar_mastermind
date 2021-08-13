@@ -7,6 +7,12 @@ class Individuo:
         self.fitness = None
 
     def calcula_fitness(self, senha):
+        """
+        Essa função realiza o calculo e atribuição do fitness do indivíduo.
+        O fitness é, basicamente, a soma dos feedbacks de cada componente que compõe o "chute" do individuo
+        :param senha: senha que deve ser descoberta, utilizada para atribuir os feedbacks
+        :return: o fitness do individuo
+        """
         for index, parte in enumerate(self.chute):
             if parte == senha[index]:
                 self.avaliacao[index] = 1

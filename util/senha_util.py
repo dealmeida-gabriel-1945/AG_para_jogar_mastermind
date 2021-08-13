@@ -3,6 +3,16 @@ import parametros as Params
 from random import choice
 
 
+def gera_senha_para_ser_desoberta():
+    """
+    Gerar senha aleatória e sem repetições se não for especificado alguma senha estática
+    :returns senha: senha pseudo-aleatória ou senha estática ditada no arquivo de parâmetros
+    """
+    if Params.senha_estatica is not None:
+        return Params.senha_estatica
+    return gera_senha()
+
+
 def gera_senha():
     """
     Gerar senha aleatória e sem repetições

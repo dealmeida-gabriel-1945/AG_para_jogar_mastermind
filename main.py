@@ -1,9 +1,11 @@
 from util.senha_util import gera_senha
 from util.geracao_util import gera_geracao, executa_crossover_e_mutacoes_em_geracao
 import parametros as Params
+import datetime
 
 
 def run():
+    inicio = datetime.datetime.now()
     # Senha que deverá ser descoberta
     senha = gera_senha()
     print(f'\n\nSenha para ser descoberta: {senha}\n\n')
@@ -24,6 +26,7 @@ def run():
             executa_crossover_e_mutacoes_em_geracao(geracao_atual, senha)
             geracao_atual.numero += 1
 
+    final = datetime.datetime.now()
     # Prints da finalização da execução
     print('\n\n\n\n')
     if achou_senha:
@@ -35,6 +38,9 @@ def run():
                 print(f'{index}) {individuo}')
     else:
         print('Não foi encontrada a senha :(')
+    print(f'\n\nSenha: {senha}')
+    print(Params.to_string())
+    print(f'Tempo de execução: {(inicio - final).seconds.real}')
 
 
 if __name__ == '__main__':
