@@ -31,7 +31,7 @@ def run():
         # print(f'Geração {geracao}')
         print('Individuos que acertaram')
         for index, individuo in enumerate(geracao_atual.individuos):
-            if individuo == senha:
+            if individuo.chute == senha:
                 print(f'{index}) {individuo}')
     else:
         print('Não foi encontrada a senha :(')

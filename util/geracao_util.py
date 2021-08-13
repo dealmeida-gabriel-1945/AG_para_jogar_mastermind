@@ -70,26 +70,38 @@ def executa_crossover_e_mutacoes_em_individuos(progenitor_1, progenitor_2, senha
         aplica_mutacoes(novo_individuo, indices_para_embaralhar, caracteres_banidos)
 
         novo_individuo.calcula_fitness(senha)
-        # print(f'{novo_individuo}')
-
-        meuset = set(novo_individuo.chute)
-        if len(meuset) != len(novo_individuo.chute):
-            print('uepa')
 
         return novo_individuo
 
 
 def aplicar_logica_onde_ha_pontuacao_1(novo_individuo, progenitor_1, progenitor_2):
+    """
+    Essa função é responsável por passar todos os caracteres que recebeream feedback 1, tanto no progenitor 1 tanto no 2,
+    para o filho
+    :param novo_individuo: o indivíduo que está sendo "montado" (filho)
+    :param progenitor_1: primeiro progenitor
+    :param progenitor_2: segundo progenitor
+    """
     for index, veridito in enumerate(progenitor_1.avaliacao):
         if veridito == 1:
             novo_individuo.chute[index] = progenitor_1.chute[index]
 
-    for index, veridito in enumerate(progenitor_1.avaliacao):
+    for index, veridito in enumerate(progenitor_2.avaliacao):
         if veridito == 1:
             novo_individuo.chute[index] = progenitor_2.chute[index]
 
 
 def aplicar_logica_onde_ha_pontuacao_0dot5(novo_individuo, progenitor_1, progenitor_2):
+    """
+    Esta função realiza a passagem dos caracteres que receberam feedback 0.5, tanto no progenitor 1 tanto no 2,
+    mas priorizando a não repetição de elementos dentro do indivíduo.
+    Para cada valor passado dos pais para o filho é adicionado o valor de seu indice dentro do vetor que será retornado
+    e, posteriormente, utilizado para realização de um embaralhamento.
+    :param novo_individuo: o indivíduo que está sendo "montado" (filho)
+    :param progenitor_1: primeiro progenitor
+    :param progenitor_2: segundo progenitor
+    :return: lista de indices a serem embaralhados dentro do novo_individuo
+    """
     indices_para_embaralhar = list()
     for index in range(len(progenitor_1.avaliacao)):
         if progenitor_1.avaliacao[index] != progenitor_2.avaliacao[index]:
@@ -111,6 +123,13 @@ def aplicar_logica_onde_ha_pontuacao_0dot5(novo_individuo, progenitor_1, progeni
 
 
 def aplica_mutacoes(novo_individuo, indices_para_embaralhar, caracteres_banidos):
+    """
+    Esse método realiza, caso for necessário, as mutações de embaralhamento de valores que receberam feedback 0.5
+    e a de sorteio de novos valores não utilizados e não banidos.
+    :param novo_individuo: o indivíduo que está sendo "montado" (filho)
+    :param indices_para_embaralhar: lista de indices que pertence ao novo_individuo que devem ser embaralhados
+    :param caracteres_banidos: lista de caracteres banidos, ou seja, não serão uma opção para futuros individuos
+    """
     # Caso ainda tenha Nones no novo individuo ou , ocorre a mutação
     if len(indices_para_embaralhar) != 0:
         realiza_mutacao_embaralhar_chutes_com_avaliacao_0dot5(novo_individuo, indices_para_embaralhar)
@@ -119,12 +138,23 @@ def aplica_mutacoes(novo_individuo, indices_para_embaralhar, caracteres_banidos)
 
 
 def realiza_mutacao_avaliacao_0(novo_individuo, caracteres_banidos):
+    """
+    Essa função, para cada posição do novo indivíduo, é sorteado um novo valor não utilizado e não banido.
+    :param novo_individuo: o indivíduo que está sendo "montado" (filho)
+    :param caracteres_banidos: lista de caracteres banidos, ou seja, não serão uma opção para futuros individuos
+    """
     for index, valor in enumerate(novo_individuo.chute):
         if valor is None:
             novo_individuo.chute[index] = gera_caractere_aleatorio_nao_banido_e_nao_usado(caracteres_banidos, novo_individuo.chute)
 
 
 def realiza_mutacao_embaralhar_chutes_com_avaliacao_0dot5(novo_individuo, indices_para_embaralhar):
+    """
+    Esta função realiza a mutação para nos valores que receberam feedback 0.5, que consiste em embaralhar, dentro do
+    próprio indivíduo tais valores.
+    :param novo_individuo: o indivíduo que está sendo "montado" (filho)
+    :param indices_para_embaralhar: lista de indices que pertence ao novo_individuo que devem ser embaralhados
+    """
     valores_dos_indices_para_embaralhar = [novo_individuo.chute[indice] for indice in indices_para_embaralhar]
     for indice in indices_para_embaralhar:
         novo_individuo.chute[indice] = None
@@ -138,10 +168,3 @@ def realiza_mutacao_embaralhar_chutes_com_avaliacao_0dot5(novo_individuo, indice
             if valor != valor_escolhido
         ]
         novo_individuo.chute[index_escolhido] = valor_escolhido
-
-
-def realiza_mutacao_indices_restantes(novo_individuo, indices_para_embaralhar):
-    indices_embaralhados = [n for n in indices_para_embaralhar]
-    shuffle(indices_embaralhados)
-    for index_real, index in enumerate(indices_embaralhados):
-        novo_individuo.chute[indices_para_embaralhar[index_real]] = novo_individuo.chute[index]
